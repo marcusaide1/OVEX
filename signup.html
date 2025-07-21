@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up | OVEXcrypto</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+  <div class="w-full max-w-md p-8 bg-gray-800 rounded-lg shadow-lg">
+    <h1 class="text-2xl font-bold mb-6 text-center">Create Account</h1>
+    
+    <form id="signupForm" class="space-y-4">
+      <div>
+        <label for="email" class="block mb-1">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email"
+          class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          required
+        >
+      </div>
+      
+      <div>
+        <label for="password" class="block mb-1">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password"
+          class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          required
+          minlength="8"
+        >
+      </div>
+      
+      <button 
+        type="submit"
+        class="w-full bg-green-500 hover:bg-green-600 text-black font-bold py-2 px-4 rounded transition-colors"
+      >
+        Sign Up
+      </button>
+      
+      <p class="text-center text-sm mt-4">
+        Already have an account? 
+        <a href="login.html" class="text-green-400 hover:underline">Log in</a>
+      </p>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Show loading state
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+      
+      const formData = {
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/api/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          // Store user data temporarily if needed
+          localStorage.setItem('signupEmail', formData.email);
+          
+          // Redirect to dashboard or verification page
+          window.location.href = 'dashboard.html';
+        } else {
+          alert(`Error: ${result.message || 'Signup failed'}`);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Network error. Please check your connection and try again.');
+      } finally {
+        // Reset button state
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+      }
+    });
+  </script>
+  
+  <!-- Load Font Awesome for spinner icon -->
+  <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+</body>
+</html>
