@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card .icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .change {
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .positive { color: #10b981; }
+        .negative { color: #ef4444; }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .holdings-table {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .table tr:hover {
+            background: #f9fafb;
+        }
+
+        .watchlist {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .watchlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .watchlist-item:last-child {
+            border-bottom: none;
+        }
+
+        .symbol {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .company-name {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .price {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .news-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .news-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .news-meta {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-chart-line"></i> Investment Dashboard</h1>
+            <p>Track your portfolio performance and market insights</p>
+            <button class="refresh-btn" onclick="refreshData()">
+                <i class="fas fa-sync-alt"></i> Refresh Data
+            </button>
+        </div>
+
+        <!-- Key Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="icon positive">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="value" id="totalValue">$125,420.50</div>
+                <div class="label">Total Portfolio Value</div>
+                <div class="change positive">
+                    <i class="fas fa-arrow-up"></i> +$2,340.50 (1.9%)
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="icon positive">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="value" id="dayChange">+$1,245.30</div>
+                <div class="label">Today's Change</div>
+                <div class="change positive">
+                    <i class="fas fa-arrow-up"></i> +1.0%
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="icon positive">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="value" id="totalGain">+$18,420.50</div>
+                <div class="label">Total Gain/Loss</div>
+                <div class="change positive">
+                    <i class="fas fa-arrow-up"></i> +17.2%
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="icon" style="color: #3b82f6;">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="value" id="cashBalance">$12,580.00</div>
+                <div class="label">Available Cash</div>
+                <div class="change" style="color: #666;">
+                    <i class="fas fa-minus"></i> Uninvested
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3 class="chart-title">Portfolio Performance (6 Months)</h3>
+                <canvas id="portfolioChart" width="400" height="200"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h3 class="chart-title">Asset Allocation</h3>
+                <canvas id="allocationChart" width="300" height="300"></canvas>
+            </div>
+        </div>
+
+        <!-- Portfolio Details -->
+        <div class="portfolio-grid">
+            <div class="holdings-table">
+                <h3 class="chart-title">Current Holdings</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Shares</th>
+                            <th>Price</th>
+                            <th>Value</th>
+                            <th>Change</th>
+                        </tr>
+                    </thead>
+                    <tbody id="holdingsTableBody">
+                        <tr>
+                            <td><strong>AAPL</strong></td>
+                            <td>150</td>
+                            <td>$185.50</td>
+                            <td>$27,825.00</td>
+                            <td class="positive">+2.1%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MSFT</strong></td>
+                            <td>80</td>
+                            <td>$375.20</td>
+                            <td>$30,016.00</td>
+                            <td class="positive">+1.8%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GOOGL</strong></td>
+                            <td>45</td>
+                            <td>$142.30</td>
+                            <td>$6,403.50</td>
+                            <td class="negative">-0.5%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TSLA</strong></td>
+                            <td>120</td>
+                            <td>$185.75</td>
+                            <td>$22,290.00</td>
+                            <td class="positive">+3.2%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>NVDA</strong></td>
+                            <td>60</td>
+                            <td>$485.60</td>
+                            <td>$29,136.00</td>
+                            <td class="positive">+4.1%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="watchlist">
+                <h3 class="chart-title">Watchlist</h3>
+                <div class="watchlist-item">
+                    <div>
+                        <div class="symbol">AMD</div>
+                        <div class="company-name">Advanced Micro Devices</div>
+                    </div>
+                    <div>
+                        <div class="price">$142.85</div>
+                        <div class="change positive">+2.4%</div>
+                    </div>
+                </div>
+                <div class="watchlist-item">
+                    <div>
+                        <div class="symbol">AMZN</div>
+                        <div class="company-name">Amazon.com Inc</div>
+                    </div>
+                    <div>
+                        <div class="price">$3,285.50</div>
+                        <div class="change negative">-1.2%</div>
+                    </div>
+                </div>
+                <div class="watchlist-item">
+                    <div>
+                        <div class="symbol">META</div>
+                        <div class="company-name">Meta Platforms</div>
+                    </div>
+                    <div>
+                        <div class="price">$485.20</div>
+                        <div class="change positive">+1.8%</div>
+                    </div>
+                </div>
+                <div class="watchlist-item">
+                    <div>
+                        <div class="symbol">NFLX</div>
+                        <div class="company-name">Netflix Inc</div>
+                    </div>
+                    <div>
+                        <div class="price">$485.75</div>
+                        <div class="change positive">+0.9%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Market News -->
+        <div class="news-section">
+            <h3 class="chart-title">Market News</h3>
+            <div class="news-item">
+                <div class="news-title">Tech Stocks Rally on Strong Earnings Reports</div>
+                <div class="news-meta">MarketWatch • 2 hours ago</div>
+            </div>
+            <div class="news-item">
+                <div class="news-title">Federal Reserve Maintains Interest Rates</div>
+                <div class="news-meta">Reuters • 4 hours ago</div>
+            </div>
+            <div class="news-item">
+                <div class="news-title">Electric Vehicle Sales Surge in Q4</div>
+                <div class="news-meta">Bloomberg • 6 hours ago</div>
+            </div>
+            <div class="news-item">
+                <div class="news-title">Cryptocurrency Market Shows Signs of Recovery</div>
+                <div class="news-meta">CoinDesk • 8 hours ago</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Portfolio Performance Chart
+        const portfolioCtx = document.getElementById('portfolioChart').getContext('2d');
+        const portfolioChart = new Chart(portfolioCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Portfolio Value',
+                    data: [107000, 112000, 108000, 115000, 121000, 125420],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Asset Allocation Chart
+        const allocationCtx = document.getElementById('allocationChart').getContext('2d');
+        const allocationChart = new Chart(allocationCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Technology', 'Healthcare', 'Finance', 'Energy', 'Consumer', 'Cash'],
+                datasets: [{
+                    data: [45, 20, 15, 8, 7, 5],
+                    backgroundColor: [
+                        '#667eea',
+                        '#764ba2',
+                        '#f093fb',
+                        '#f5576c',
+                        '#4facfe',
+                        '#43e97b'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+
+        // Refresh data function
+        function refreshData() {
+            // Simulate data refresh with random variations
+            const refreshBtn = document.querySelector('.refresh-btn');
+            refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+            
+            setTimeout(() => {
+                // Update portfolio value with small random change
+                const currentValue = 125420.50;
+                const change = (Math.random() - 0.5) * 2000;
+                const newValue = currentValue + change;
+                
+                document.getElementById('totalValue').textContent = '$' + newValue.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                
+                // Update day change
+                const dayChangeElement = document.getElementById('dayChange');
+                const dayChange = (Math.random() - 0.3) * 3000;
+                const isPositive = dayChange > 0;
+                
+                dayChangeElement.textContent = (isPositive ? '+$' : '-$') + Math.abs(dayChange).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                
+                refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Data';
+                
+                // Show success message
+                refreshBtn.innerHTML = '<i class="fas fa-check"></i> Updated!';
+                setTimeout(() => {
+                    refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Data';
+                }, 2000);
+            }, 1500);
+        }
+
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            // Simulate real-time price updates
+            const holdings = document.querySelectorAll('#holdingsTableBody tr');
+            holdings.forEach(row => {
+                const changeCell = row.cells[4];
+                const currentChange = parseFloat(changeCell.textContent.replace(/[+\-%]/g, ''));
+                const newChange = currentChange + (Math.random() - 0.5) * 0.5;
+                const isPositive = newChange > 0;
+                
+                changeCell.textContent = (isPositive ? '+' : '') + newChange.toFixed(1) + '%';
+                changeCell.className = isPositive ? 'positive' : 'negative';
+            });
+        }, 30000);
+
+        // Initialize tooltips and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add fade-in animation to cards
+            const cards = document.querySelectorAll('.stat-card, .chart-container, .holdings-table, .watchlist, .news-section');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
