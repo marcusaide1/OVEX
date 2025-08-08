@@ -1,56 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
-import Navigation from './components/Navigation';
-import HeroSection from './components/HeroSection';
-import LivePrices from './components/LivePrices';
-import AboutSection from './components/AboutSection';
-import FeaturesSection from './components/FeaturesSection';
-import TestimonialsSection from './components/TestimonialsSection';
-import PricingSection from './components/PricingSection';
-import CTASection from './components/CTASection';
-import ContactSection from './components/ContactSection';
-import Footer from './components/Footer';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './index.css';
+
+// Page Components
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import DashboardPage from './pages/DashboardPage';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    // Check for saved dark mode preference
-    const savedDarkMode = localStorage.getItem('darkMode');
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    setDarkMode(savedDarkMode);
     if (savedDarkMode) {
-      setDarkMode(JSON.parse(savedDarkMode));
+      document.documentElement.classList.add('dark');
     }
   }, []);
 
-  useEffect(() => {
-    // Apply dark mode class to document
-    if (darkMode) {
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', newDarkMode.toString());
+    if (newDarkMode) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-    // Save preference
-    localStorage.setItem('darkMode', JSON.stringify(darkMode));
-  }, [darkMode]);
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      <Navigation darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-      <HeroSection />
-      <LivePrices />
-      <AboutSection />
-      <FeaturesSection />
-      <TestimonialsSection />
-      <PricingSection />
-      <CTASection />
-      <ContactSection />
-      <Footer />
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<HomePage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route path="/login" element={<LoginPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route path="/register" element={<RegisterPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route path="/dashboard" element={<DashboardPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

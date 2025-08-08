@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faShieldAlt, 
@@ -42,16 +43,20 @@ const HeroSection = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <a 
-                href="/register.html"
-                className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-center"
-              >
-                Start Trading Now
-                <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
-              </a>
-              <button className="border-2 border-white/30 hover:border-white text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 hover:bg-white/10 backdrop-blur-sm">
-                Watch Demo
-              </button>
+                <Link 
+                    to="/register" 
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors inline-flex items-center justify-center"
+                >
+                    <FontAwesomeIcon icon={faRocket} className="mr-2" />
+                    Start Trading Now
+                </Link>
+                <button 
+                    onClick={() => scrollToSection('features')}
+                    className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 rounded-lg text-lg font-semibold transition-colors inline-flex items-center justify-center"
+                >
+                    <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
+                    Learn More
+                </button>
             </div>
 
             {/* Stats */}

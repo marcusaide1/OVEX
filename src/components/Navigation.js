@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faChartLine, 
@@ -84,20 +85,14 @@ const Navigation = ({ darkMode, toggleDarkMode }) => {
               >
                 <FontAwesomeIcon icon={darkMode ? faSun : faMoon} />
               </button>
-              <a 
-                href="/login.html"
-                className="text-gray-700 dark:text-gray-300 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                <FontAwesomeIcon icon={faSignInAlt} className="mr-1" />
+              <Link to="/login" className="text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 transition-colors px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:border-orange-500 dark:hover:border-orange-400">
+                <FontAwesomeIcon icon={faSignInAlt} className="mr-2" />
                 Login
-              </a>
-              <a 
-                href="/register.html"
-                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-              >
-                <FontAwesomeIcon icon={faUser} className="mr-1" />
-                Sign Up
-              </a>
+              </Link>
+              <Link to="/register" className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg transition-colors">
+                <FontAwesomeIcon icon={faUserPlus} className="mr-2" />
+                Get Started
+              </Link>
             </div>
 
             {/* Mobile menu button */}
