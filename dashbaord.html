@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investment Dashboard | ZARcrypto Exchange</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <style>
+    .sidebar {
+      transition: all 0.3s;
+    }
+    .sidebar-collapsed {
+      width: 80px;
+    }
+    .sidebar-collapsed .nav-text {
+      display: none;
+    }
+    .active-nav-item {
+      background-color: rgba(16, 185, 129, 0.1);
+      border-left: 3px solid #10B981;
+    }
+    .chart-container {
+      height: 350px;
+    }
+    .mini-chart {
+      height: 60px;
+    }
+    .price-up {
+      color: #10B981;
+    }
+    .price-down {
+      color: #EF4444;
+    }
+    .animate-pulse-slow {
+      animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        z-index: 1000;
+        height: 100vh;
+        transform: translateX(-100%);
+      }
+      .sidebar-open {
+        transform: translateX(0);
+      }
+    }
+    .notification-dot {
+      animation: blink 2s infinite;
+    }
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex h-screen overflow-hidden">
+
+  <!-- Mobile Menu Button -->
+  <button id="mobileMenuButton" class="md:hidden fixed top-4 left-4 z-50 bg-gray-800 p-2 rounded text-white">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <!-- Sidebar -->
+  <aside class="sidebar bg-gray-800 text-white w-64 flex-shrink-0 flex flex-col md:translate-x-0">
+    <div class="p-4 flex items-center justify-between border-b border-gray-700">
+      <div class="flex items-center">
+        <i class="fas fa-chart-line text-green-400 text-2xl mr-3"></i>
+        <span class="text-xl font-bold nav-text">ZARcrypto</span>
+      </div>
+      <button id="collapseButton" class="text-gray-400 hover:text-white hidden md:block">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+    </div>
+
+    <div class="p-4 border-b border-gray-700 flex items-center">
+      <div class="relative">
+        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-10 h-10 rounded-full">
+        <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-800"></div>
+      </div>
+      <div class="ml-3 nav-text">
+        <div class="font-medium">John Doe</div>
+        <div class="text-xs text-gray-400">Premium <i class="fas fa-crown text-yellow-400 ml-1"></i></div>
+      </div>
+    </div>
+
+    <nav class="flex-grow overflow-y-auto">
+      <ul class="p-2">
+        <li>
+          <a href="#" class="flex items-center p-3 rounded hover:bg-gray-700 active-nav-item">
+            <i class="fas fa-tachometer-alt text-green-400 w-6"></i>
+            <span class="ml-3 nav-text">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="flex items-center p-3 rounded hover:bg-gray-700">
+            <i class="fas fa-chart-candlestick text-blue-400 w-6"></i>
+            <span class="ml-3 nav-text">Trading</span>
+            <span class="ml-auto notification-dot bg-red-500 text-white text-xs px-1 py-0.5 rounded-full nav-text">Live</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="flex items-center p-3 rounded hover:bg-gray-700">
+            <i class="fas fa-briefcase text-purple-400 w-6"></i>
+            <span class="ml-3 nav-text">Portfolio</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="flex items-center p-3 rounded hover:bg-gray-700">
+            <i class="fas fa-wallet text-yellow-400 w-6"></i>
+            <span class="ml-3 nav-text">Wallet</span>
+            <span class="ml-auto bg-green-500 text-white text-xs px-2 py-1 rounded-full nav-text">R 24.5K</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="flex items-center p-3 rounded hover:bg-gray-700">
+            <i class="fas fa-newspaper text-orange-400 w-6"></i>
+            <span class="ml-3 nav-text">Market News</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="flex items-center p-3 rounded hover:bg-gray-700">
+            <i class="fas fa-history text-indigo-400 w-6"></i>
+            <span class="ml-3 nav-text">Transactions</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="flex items-center p-3 rounded hover:bg-gray-700">
+            <i class="fas fa-robot text-pink-400 w-6"></i>
+            <span class="ml-3 nav-text">AI Insights</span>
+            <span class="ml-auto bg-purple-500 text-white text-xs px-1 py-0.5 rounded-full nav-text">New</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="flex items-center p-3 rounded hover:bg-gray-700">
+            <i class="fas fa-shield-alt text-red-400 w-6"></i>
+            <span class="ml-3 nav-text">Security</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="flex items-center p-3 rounded hover:bg-gray-700">
+            <i class="fas fa-cog text-gray-400 w-6"></i>
+            <span class="ml-3 nav-text">Settings</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="p-4 border-t border-gray-700">
+      <a href="#" class="flex items-center text-red-400 hover:text-red-300">
+        <i class="fas fa-sign-out-alt w-6"></i>
+        <span class="ml-3 nav-text">Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="flex-grow overflow-auto">
+    <!-- Top Bar -->
+    <header class="bg-white shadow-sm">
+      <div class="flex justify-between items-center p-4">
+        <div>
+          <h1 class="text-2xl font-bold">Investment Dashboard</h1>
+          <p class="text-gray-500 text-sm">Welcome back, John! Here's your portfolio overview.</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="hidden md:flex items-center space-x-2 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span>Market Open</span>
+          </div>
+          <div class="relative">
+            <i class="fas fa-bell text-gray-500 hover:text-gray-700 cursor-pointer text-lg"></i>
+            <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full notification-dot"></span>
+          </div>
+          <div class="hidden md:flex items-center space-x-2 bg-gray-100 p-2 rounded-lg">
+            <img src="https://flagcdn.com/w20/za.png" alt="ZAR" class="w-4 h-4">
+            <span class="text-sm font-medium">ZAR</span>
+            <i class="fas fa-chevron-down text-xs"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <main class="p-4 space-y-6">
+      <!-- Portfolio Summary Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-xl shadow-lg p-6 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full -mr-10 -mt-10 opacity-20"></div>
+          <div class="relative">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="text-gray-500 text-sm">Total Portfolio Value</p>
+                <h2 class="text-3xl font-bold mt-2">R 156,420.50</h2>
+                <p class="text-green-500 text-sm mt-1 flex items-center">
+                  <i class="fas fa-arrow-up mr-1"></i> +12.4% (R 17,280)
+                </p>
+              </div>
+              <i class="fas fa-chart-line text-green-500 text-2xl"></i>
+            </div>
+            <div class="mt-4">
+              <div class="mini-chart" id="portfolioChart"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg p-6 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full -mr-10 -mt-10 opacity-20"></div>
+          <div class="relative">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="text-gray-500 text-sm">Available Cash</p>
+                <h2 class="text-3xl font-bold mt-2">R 24,500.00</h2>
+                <p class="text-gray-500 text-sm mt-1">≈ $1,650.00 USD</p>
+              </div>
+              <i class="fas fa-wallet text-blue-500 text-2xl"></i>
+            </div>
+            <div class="mt-4 flex space-x-2">
+              <button class="flex-1 bg-blue-500 text-white py-2 px-3 rounded-lg text-sm hover:bg-blue-600 transition-colors">
+                <i class="fas fa-plus mr-1"></i> Deposit
+              </button>
+              <button class="flex-1 bg-gray-100 text-gray-700 py-2 px-3 rounded-lg text-sm hover:bg-gray-200 transition-colors">
+                <i class="fas fa-minus mr-1"></i> Withdraw
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg p-6 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full -mr-10 -mt-10 opacity-20"></div>
+          <div class="relative">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="text-gray-500 text-sm">Today's P&L</p>
+                <h2 class="text-3xl font-bold mt-2 text-green-500">+R 3,420.50</h2>
+                <p class="text-green-500 text-sm mt-1">+2.24% gain</p>
+              </div>
+              <i class="fas fa-trending-up text-purple-500 text-2xl"></i>
+            </div>
+            <div class="mt-4">
+              <div class="mini-chart" id="dailyPnlChart"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg p-6 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full -mr-10 -mt-10 opacity-20"></div>
+          <div class="relative">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="text-gray-500 text-sm">Active Positions</p>
+                <h2 class="text-3xl font-bold mt-2">12</h2>
+                <p class="text-gray-500 text-sm mt-1">8 profitable</p>
+              </div>
+              <i class="fas fa-layer-group text-yellow-500 text-2xl"></i>
+            </div>
+            <div class="mt-4 flex justify-between text-sm">
+              <span class="text-green-500">8 <i class="fas fa-arrow-up"></i></span>
+              <span class="text-red-500">4 <i class="fas fa-arrow-down"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Performance Chart -->
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-bold">Portfolio Performance</h2>
+          <div class="flex space-x-2">
+            <button class="px-3 py-1 bg-blue-500 text-white rounded-lg text-sm">1D</button>
+            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm">1W</button>
+            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm">1M</button>
+            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm">3M</button>
+            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm">1Y</button>
+          </div>
+        </div>
+        <div class="chart-container" id="performanceChart"></div>
+      </div>
+
+      <!-- Asset Allocation & Top Holdings -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Asset Allocation -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h2 class="text-xl font-bold mb-6">Asset Allocation</h2>
+          <div class="chart-container" id="allocationChart"></div>
+          <div class="mt-4 space-y-3">
+            <div class="flex justify-between items-center">
+              <div class="flex items-center">
+                <div class="w-3 h-3 bg-orange-500 rounded-full mr-2"></div>
+                <span class="text-sm">Cryptocurrency</span>
+              </div>
+              <span class="text-sm font-medium">65%</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <div class="flex items-center">
+                <div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+                <span class="text-sm">Cash</span>
+              </div>
+              <span class="text-sm font-medium">20%</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <div class="flex items-center">
+                <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                <span class="text-sm">Stocks</span>
+              </div>
+              <span class="text-sm font-medium">15%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Holdings -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h2 class="text-xl font-bold mb-6">Top Holdings</h2>
+          <div class="space-y-4">
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center mr-3">
+                  <i class="fab fa-bitcoin text-orange-500"></i>
+                </div>
+                <div>
+                  <div class="font-medium">Bitcoin</div>
+                  <div class="text-sm text-gray-500">2.15 BTC</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="font-medium">R 89,420.50</div>
+                <div class="text-sm text-green-500">+5.2%</div>
+              </div>
+            </div>
+            
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                  <i class="fab fa-ethereum text-blue-500"></i>
+                </div>
+                <div>
+                  <div class="font-medium">Ethereum</div>
+                  <div class="text-sm text-gray-500">8.5 ETH</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="font-medium">R 42,350.00</div>
+                <div class="text-sm text-red-500">-2.1%</div>
+              </div>
+            </div>
+            
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                  <span class="text-purple-500 font-bold text-sm">ADA</span>
+                </div>
+                <div>
+                  <div class="font-medium">Cardano</div>
+                  <div class="text-sm text-gray-500">2,450 ADA</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="font-medium">R 12,650.00</div>
+                <div class="text-sm text-green-500">+8.7%</div>
+              </div>
+            </div>
+            
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div class="flex items-center">
+                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                  <span class="text-green-500 font-bold text-sm">SOL</span>
+                </div>
+                <div>
+                  <div class="font-medium">Solana</div>
+                  <div class="text-sm text-gray-500">125 SOL</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="font-medium">R 12,000.00</div>
+                <div class="text-sm text-green-500">+12.3%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Market Overview & Quick Actions -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Market Overview -->
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold">Market Overview</h2>
+            <button class="text-blue-500 text-sm hover:text-blue-600">View All Markets</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full">
+              <thead>
+                <tr class="text-left text-gray-500 text-sm">
+                  <th class="pb-3">Asset</th>
+                  <th class="pb-3">Price</th>
+                  <th class="pb-3">24h Change</th>
+                  <th class="pb-3">Volume</th>
+                  <th class="pb-3">Chart</th>
+                </tr>
+              </thead>
+              <tbody class="space-y-2">
+                <tr class="border-t">
+                  <td class="py-3">
+                    <div class="flex items-center">
+                      <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fab fa-bitcoin text-orange-500 text-sm"></i>
+                      </div>
+                      <div>
+                        <div class="font-medium">Bitcoin</div>
+                        <div class="text-xs text-gray-500">BTC</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3 font-medium">R 1,245,680</td>
+                  <td class="py-3">
+                    <span class="text-green-500 text-sm">+5.2%</span>
+                  </td>
+                  <td class="py-3 text-sm text-gray-500">R 2.1B</td>
+                  <td class="py-3">
+                    <div class="mini-chart" id="btcMiniChart"></div>
+                  </td>
+                </tr>
+                <tr class="border-t">
+                  <td class="py-3">
+                    <div class="flex items-center">
+                      <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fab fa-ethereum text-blue-500 text-sm"></i>
+                      </div>
+                      <div>
+                        <div class="font-medium">Ethereum</div>
+                        <div class="text-xs text-gray-500">ETH</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3 font-medium">R 68,420</td>
+                  <td class="py-3">
+                    <span class="text-red-500 text-sm">-2.1%</span>
+                  </td>
+                  <td class="py-3 text-sm text-gray-500">R 1.8B</td>
+                  <td class="py-3">
+                    <div class="mini-chart" id="ethMiniChart"></div>
+                  </td>
+                </tr>
+                <tr class="border-t">
+                  <td class="py-3">
+                    <div class="flex items-center">
+                      <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                        <span class="text-purple-500 font-bold text-xs">ADA</span>
+                      </div>
+                      <div>
+                        <div class="font-medium">Cardano</div>
+                        <div class="text-xs text-gray-500">ADA</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3 font-medium">R 8.45</td>
+                  <td class="py-3">
+                    <span class="text-green-500 text-sm">+8.7%</span>
+                  </td>
+                  <td class="py-3 text-sm text-gray-500">R 450M</td>
+                  <td class="py-3">
+                    <div class="mini-chart" id="adaMiniChart"></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h2 class="text-xl font-bold mb-6">Quick Actions</h2>
+          <div class="space-y-4">
+            <button class="w-full flex items-center justify-center bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 transition-colors">
+              <i class="fas fa-plus mr-2"></i>
+              Buy Crypto
+            </button>
+            <button class="w-full flex items-center justify-center bg-red-500 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors">
+              <i class="fas fa-minus mr-2"></i>
+              Sell Crypto
+            </button>
+            <button class="w-full flex items-center justify-center bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 transition-colors">
+              <i class="fas fa-exchange-alt mr-2"></i>
+              Convert
+            </button>
+            <button class="w-full flex items-center justify-center bg-purple-500 text-white py-3 px-4 rounded-lg hover:bg-purple-600 transition-colors">
+              <i class="fas fa-download mr-2"></i>
+              Deposit Funds
+            </button>
+            <button class="w-full flex items-center justify-center bg-gray-500 text-white py-3 px-4 rounded-lg hover:bg-gray-600 transition-colors">
+              <i class="fas fa-upload mr-2"></i>
+              Withdraw Funds
+            </button>
+          </div>
+          
+          <div class="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+            <h3 class="font-medium text-gray-800 mb-2">AI Trading Assistant</h3>
+            <p class="text-sm text-gray-600 mb-3">Get personalized investment recommendations</p>
+            <button class="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 px-4 rounded-lg text-sm hover:from-blue-600 hover:to-purple-600 transition-all">
+              <i class="fas fa-robot mr-2"></i>
+              Get AI Insights
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Transactions -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="p-6 border-b border-gray-200">
+          <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold">Recent Transactions</h2>
+            <button class="text-blue-500 text-sm hover:text-blue-600">View All</button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value (ZAR)</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
+                      <i class="fas fa-arrow-down text-green-500"></i>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">Buy Bitcoin</div>
+                      <div class="text-sm text-gray-500">Market Order</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">0.0054 BTC</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 font-medium">R 6,720.50</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    Completed
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  2 hours ago
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href="#" class="text-blue-600 hover:text-blue-900">View</a>
+                </td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10 bg-red-100 rounded-full flex items-center justify-center">
+                      <i class="fas fa-arrow-up text-red-500"></i>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">Sell Ethereum</div>
+                      <div class="text-sm text-gray-500">Limit Order</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">0.5 ETH</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 font-medium">R 34,210.00</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                    Pending
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  4 hours ago
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href="#" class="text-blue-600 hover:text-blue-900">Cancel</a>
+                </td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                      <i class="fas fa-plus text-blue-500"></i>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900">ZAR Deposit</div>
+                      <div class="text-sm text-gray-500">Bank Transfer</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">R 15,000.00</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 font-medium">R 15,000.00</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                    Completed
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  1 day ago
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a href="#" class="text-blue-600 hover:text-blue-900">View</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobileMenuButton').addEventListener('click', function() {
+      document.querySelector('.sidebar').classList.toggle('sidebar-open');
+    });
+
+    // Sidebar collapse/expand
+    document.getElementById('collapseButton').addEventListener('click', function() {
+      document.querySelector('.sidebar').classList.toggle('sidebar-collapsed');
+      const icon = this.querySelector('i');
+      if (document.querySelector('.sidebar').classList.contains('sidebar-collapsed')) {
+        icon.classList.remove('fa-chevron-left');
+        icon.classList.add('fa-chevron-right');
+      } else {
+        icon.classList.remove('fa-chevron-right');
+        icon.classList.add('fa-chevron-left');
+      }
+    });
+
+    // Initialize Charts
+    document.addEventListener('DOMContentLoaded', function() {
+      // Portfolio Performance Chart
+      const performanceOptions = {
+        chart: {
+          type: 'area',
+          height: 350,
+          toolbar: {
+            show: false
+          }
+        },
+        series: [{
+          name: 'Portfolio Value',
+          data: [140000, 142000, 138000, 145000, 149000, 152000, 156420]
+        }],
+        xaxis: {
+          categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        colors: ['#10B981'],
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shadeIntensity: 1,
+            opacityFrom: 0.7,
+            opacityTo: 0.9,
+            stops: [0, 90, 100]
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          curve: 'smooth',
+          width: 2
+        }
+      };
+      new ApexCharts(document.querySelector("#performanceChart"), performanceOptions).render();
+
+      // Asset Allocation Chart
+      const allocationOptions = {
+        chart: {
+          type: 'donut',
+          height: 350
+        },
+        series: [65, 20, 15],
+        labels: ['Cryptocurrency', 'Cash', 'Stocks'],
+        colors: ['#F59E0B', '#3B82F6', '#10B981'],
+        legend: {
+          show: false
+        },
+        dataLabels: {
+          enabled: false
+        }
+      };
+      new ApexCharts(document.querySelector("#allocationChart"), allocationOptions).render();
+
+      // Mini Charts
+      const miniChartOptions = {
+        chart: {
+          type: 'line',
+          height: 60,
+          sparkline: {
+            enabled: true
+          }
+        },
+        stroke: {
+          curve: 'smooth',
+          width: 2
+        },
+        colors: ['#10B981'],
+        tooltip: {
+          enabled: false
+        }
+      };
+
+      // Portfolio mini chart
+      new ApexCharts(document.querySelector("#portfolioChart"), {
+        ...miniChartOptions,
+        series: [{
+          data: [140, 142, 138, 145, 149, 152, 156]
+        }]
+      }).render();
+
+      // Daily P&L mini chart
+      new ApexCharts(document.querySelector("#dailyPnlChart"), {
+        ...miniChartOptions,
+        series: [{
+          data: [0, 500, 800, 1200, 2000, 2800, 3420]
+        }]
+      }).render();
+
+      // BTC mini chart
+      new ApexCharts(document.querySelector("#btcMiniChart"), {
+        ...miniChartOptions,
+        series: [{
+          data: [1200000, 1220000, 1180000, 1250000, 1245680]
+        }]
+      }).render();
+
+      // ETH mini chart
+      new ApexCharts(document.querySelector("#ethMiniChart"), {
+        ...miniChartOptions,
+        colors: ['#EF4444'],
+        series: [{
+          data: [70000, 69000, 71000, 68500, 68420]
+        }]
+      }).render();
+
+      // ADA mini chart
+      new ApexCharts(document.querySelector("#adaMiniChart"), {
+        ...miniChartOptions,
+        series: [{
+          data: [7.8, 8.0, 7.9, 8.2, 8.45]
+        }]
+      }).render();
+    });
+
+    // Simulate real-time updates
+    setInterval(() => {
+      // Update portfolio value with small random changes
+      const portfolioValue = document.querySelector('h2:contains("R 156,420.50")');
+      if (portfolioValue) {
+        const currentValue = 156420.50;
+        const change = (Math.random() - 0.5) * 1000;
+        const newValue = currentValue + change;
+        // portfolioValue.textContent = `R ${newValue.toLocaleString('en-ZA', {minimumFractionDigits: 2})}`;
+      }
+    }, 5000);
+  </script>
+</body>
+</html>

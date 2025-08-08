@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - ZARcrypto Exchange</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .hero-gradient {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        .password-strength {
+            transition: all 0.3s ease;
+        }
+        .strength-weak { background-color: #ef4444; }
+        .strength-medium { background-color: #f59e0b; }
+        .strength-strong { background-color: #10b981; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center">
+                        <i class="fas fa-chart-line text-orange-500 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-900">ZARcrypto</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-orange-500 transition-colors">Home</a>
+                    <a href="index.html#about" class="text-gray-700 hover:text-orange-500 transition-colors">About</a>
+                    <a href="index.html#features" class="text-gray-700 hover:text-orange-500 transition-colors">Features</a>
+                    <a href="index.html#pricing" class="text-gray-700 hover:text-orange-500 transition-colors">Pricing</a>
+                    <a href="index.html#contact" class="text-gray-700 hover:text-orange-500 transition-colors">Contact</a>
+                </div>
+
+                <!-- Desktop Auth Buttons -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="login.html" class="text-gray-700 hover:text-orange-500 transition-colors">Login</a>
+                    <a href="register.html" class="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors">Get Started</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobileMenuBtn" class="text-gray-700 hover:text-orange-500">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div id="mobileMenu" class="mobile-menu md:hidden fixed inset-0 z-50 bg-black bg-opacity-50">
+            <div class="bg-white w-64 h-full shadow-xl">
+                <div class="flex justify-between items-center p-4 border-b">
+                    <div class="flex items-center">
+                        <a href="index.html" class="flex items-center">
+                            <i class="fas fa-chart-line text-orange-500 text-xl mr-2"></i>
+                            <span class="text-lg font-bold">ZARcrypto</span>
+                        </a>
+                    </div>
+                    <button id="closeMobileMenu" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="p-4 space-y-4">
+                    <a href="index.html" class="block text-gray-700 hover:text-orange-500 py-2">Home</a>
+                    <a href="index.html#about" class="block text-gray-700 hover:text-orange-500 py-2">About</a>
+                    <a href="index.html#features" class="block text-gray-700 hover:text-orange-500 py-2">Features</a>
+                    <a href="index.html#pricing" class="block text-gray-700 hover:text-orange-500 py-2">Pricing</a>
+                    <a href="index.html#contact" class="block text-gray-700 hover:text-orange-500 py-2">Contact</a>
+                    <hr class="my-4">
+                    <a href="login.html" class="block text-gray-700 hover:text-orange-500 py-2">Login</a>
+                    <a href="register.html" class="block bg-orange-500 text-white px-4 py-2 rounded-lg text-center">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Registration Section -->
+    <section class="min-h-screen flex items-center justify-center py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Registration Form -->
+                <div class="bg-white rounded-2xl shadow-2xl p-8 md:p-12">
+                    <div class="text-center mb-8">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Your Account</h1>
+                        <p class="text-gray-600">Join thousands of South Africans trading Bitcoin</p>
+                    </div>
+
+                    <form id="registerForm" class="space-y-6">
+                        <!-- Personal Information -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                <input 
+                                    type="text" 
+                                    id="firstName" 
+                                    name="firstName" 
+                                    required
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                    placeholder="Enter your first name"
+                                >
+                            </div>
+                            <div>
+                                <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                <input 
+                                    type="text" 
+                                    id="lastName" 
+                                    name="lastName" 
+                                    required
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                    placeholder="Enter your last name"
+                                >
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-envelope text-gray-400"></i>
+                                </div>
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    name="email" 
+                                    required
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                    placeholder="Enter your email"
+                                >
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-phone text-gray-400"></i>
+                                </div>
+                                <input 
+                                    type="tel" 
+                                    id="phone" 
+                                    name="phone" 
+                                    required
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                    placeholder="+27 11 123 4567"
+                                >
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="idNumber" class="block text-sm font-medium text-gray-700 mb-2">South African ID Number</label>
+                            <input 
+                                type="text" 
+                                id="idNumber" 
+                                name="idNumber" 
+                                required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                placeholder="Enter your ID number"
+                                maxlength="13"
+                            >
+                        </div>
+
+                        <!-- Password Section -->
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-lock text-gray-400"></i>
+                                </div>
+                                <input 
+                                    type="password" 
+                                    id="password" 
+                                    name="password" 
+                                    required
+                                    class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                    placeholder="Create a strong password"
+                                >
+                                <button 
+                                    type="button" 
+                                    id="togglePassword"
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                                >
+                                    <i class="fas fa-eye text-gray-400 hover:text-gray-600"></i>
+                                </button>
+                            </div>
+                            <!-- Password Strength Indicator -->
+                            <div class="mt-2">
+                                <div class="flex space-x-1">
+                                    <div class="h-1 flex-1 bg-gray-200 rounded-full overflow-hidden">
+                                        <div id="passwordStrength" class="h-full password-strength rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <p id="passwordStrengthText" class="text-xs text-gray-500 mt-1">Password strength</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-lock text-gray-400"></i>
+                                </div>
+                                <input 
+                                    type="password" 
+                                    id="confirmPassword" 
+                                    name="confirmPassword" 
+                                    required
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                    placeholder="Confirm your password"
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input 
+                                    id="terms" 
+                                    name="terms" 
+                                    type="checkbox" 
+                                    required
+                                    class="h-4 w-4 text-orange-500 focus:ring-orange-500 border-gray-300 rounded"
+                                >
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="terms" class="text-gray-700">
+                                    I agree to the 
+                                    <a href="#" class="text-orange-500 hover:text-orange-600">Terms of Service</a> 
+                                    and 
+                                    <a href="#" class="text-orange-500 hover:text-orange-600">Privacy Policy</a>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="flex items-center h-5">
+                                <input 
+                                    id="marketing" 
+                                    name="marketing" 
+                                    type="checkbox" 
+                                    class="h-4 w-4 text-orange-500 focus:ring-orange-500 border-gray-300 rounded"
+                                >
+                            </div>
+                            <div class="ml-3 text-sm">
+                                <label for="marketing" class="text-gray-700">
+                                    I want to receive updates about new features and market insights
+                                </label>
+                            </div>
+                        </div>
+
+                        <button 
+                            type="submit" 
+                            class="w-full bg-orange-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                        >
+                            Create Account
+                        </button>
+
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600">
+                                Already have an account? 
+                                <a href="login.html" class="text-orange-500 hover:text-orange-600 font-semibold">
+                                    Sign in here
+                                </a>
+                            </p>
+                        </div>
+                    </form>
+
+                    <!-- Social Registration -->
+                    <div class="mt-8">
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-gray-300"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 grid grid-cols-2 gap-3">
+                            <button class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <i class="fab fa-google text-red-500 mr-2"></i>
+                                Google
+                            </button>
+                            <button class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <i class="fab fa-apple text-gray-900 mr-2"></i>
+                                Apple
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side - Benefits -->
+                <div class="hidden lg:block">
+                    <div class="animate-float">
+                        <div class="bg-white rounded-2xl p-8 shadow-2xl">
+                            <div class="text-center mb-8">
+                                <i class="fas fa-rocket text-orange-500 text-4xl mb-4"></i>
+                                <h2 class="text-2xl font-bold text-gray-900 mb-2">Start Your Trading Journey</h2>
+                                <p class="text-gray-600">Join the future of finance with ZARcrypto</p>
+                            </div>
+                            
+                            <div class="space-y-6">
+                                <div class="flex items-center">
+                                    <div class="bg-green-100 w-10 h-10 rounded-full flex items-center justify-center mr-4">
+                                        <i class="fas fa-check text-green-500"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-900">Free Account Setup</h3>
+                                        <p class="text-sm text-gray-600">No setup fees, no hidden charges</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <div class="bg-blue-100 w-10 h-10 rounded-full flex items-center justify-center mr-4">
+                                        <i class="fas fa-gift text-blue-500"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-900">Welcome Bonus</h3>
+                                        <p class="text-sm text-gray-600">Get R50 free when you deposit R500</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <div class="bg-purple-100 w-10 h-10 rounded-full flex items-center justify-center mr-4">
+                                        <i class="fas fa-graduation-cap text-purple-500"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-900">Free Trading Academy</h3>
+                                        <p class="text-sm text-gray-600">Learn trading strategies for free</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <div class="bg-yellow-100 w-10 h-10 rounded-full flex items-center justify-center mr-4">
+                                        <i class="fas fa-shield-alt text-yellow-500"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-900">Regulated & Secure</h3>
+                                        <p class="text-sm text-gray-600">FSP licensed and FICA compliant</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-8 p-4 bg-orange-50 rounded-lg">
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-orange-500 mb-2">50,000+</div>
+                                    <div class="text-sm text-gray-600">Happy traders already using ZARcrypto</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <i class="fas fa-chart-line text-orange-500 text-xl mr-2"></i>
+                    <span class="text-lg font-bold">ZARcrypto</span>
+                </div>
+                <div class="flex space-x-6 text-sm">
+                    <a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+        });
+
+        closeMobileMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+        });
+
+        // Close mobile menu when clicking outside
+        mobileMenu.addEventListener('click', (e) => {
+            if (e.target === mobileMenu) {
+                mobileMenu.classList.remove('open');
+            }
+        });
+
+        // Password toggle functionality
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            const icon = togglePassword.querySelector('i');
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
+
+        // Password strength checker
+        const passwordInput2 = document.getElementById('password');
+        const passwordStrength = document.getElementById('passwordStrength');
+        const passwordStrengthText = document.getElementById('passwordStrengthText');
+
+        passwordInput2.addEventListener('input', () => {
+            const password = passwordInput2.value;
+            let strength = 0;
+            let strengthText = '';
+
+            // Check length
+            if (password.length >= 8) strength += 25;
+            if (password.length >= 12) strength += 25;
+
+            // Check for different character types
+            if (/[a-z]/.test(password)) strength += 25;
+            if (/[A-Z]/.test(password)) strength += 25;
+            if (/[0-9]/.test(password)) strength += 25;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+
+            // Set strength bar
+            passwordStrength.style.width = strength + '%';
+
+            // Remove all classes and add appropriate one
+            passwordStrength.classList.remove('strength-weak', 'strength-medium', 'strength-strong');
+
+            if (strength < 50) {
+                passwordStrength.classList.add('strength-weak');
+                strengthText = 'Weak password';
+            } else if (strength < 75) {
+                passwordStrength.classList.add('strength-medium');
+                strengthText = 'Medium strength password';
+            } else {
+                passwordStrength.classList.add('strength-strong');
+                strengthText = 'Strong password';
+            }
+
+            passwordStrengthText.textContent = strengthText;
+        });
+
+        // Confirm password validation
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const registerForm = document.getElementById('registerForm');
+
+        confirmPasswordInput.addEventListener('input', () => {
+            const password = passwordInput2.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            if (confirmPassword && password !== confirmPassword) {
+                confirmPasswordInput.classList.add('border-red-500');
+                confirmPasswordInput.classList.remove('border-gray-300');
+            } else {
+                confirmPasswordInput.classList.remove('border-red-500');
+                confirmPasswordInput.classList.add('border-gray-300');
+            }
+        });
+
+        // Form submission
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(registerForm);
+            const data = Object.fromEntries(formData);
+            
+            // Validate passwords match
+            if (data.password !== data.confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            // Validate password strength
+            const password = data.password;
+            if (password.length < 8) {
+                alert('Password must be at least 8 characters long!');
+                return;
+            }
+
+            // Simulate registration process
+            console.log('Registration attempt:', data);
+            
+            // Show loading state
+            const submitBtn = registerForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Creating Account...';
+            submitBtn.disabled = true;
+
+            // Simulate API call
+            setTimeout(() => {
+                // Redirect to dashboard (in real app, this would be after successful registration)
+                window.location.href = 'dashbaord.html';
+            }, 3000);
+        });
+
+        // ID Number formatting
+        const idNumberInput = document.getElementById('idNumber');
+        idNumberInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 13) {
+                value = value.slice(0, 13);
+            }
+            e.target.value = value;
+        });
+
+        // Phone number formatting
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.startsWith('27')) {
+                value = '+27 ' + value.slice(2);
+            } else if (value.startsWith('0')) {
+                value = '+27 ' + value.slice(1);
+            }
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>

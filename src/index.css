@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: #f97316;
+    --primary-dark: #ea580c;
+    --secondary: #4f46e5;
+    --dark: #111827;
+    --darker: #030712;
+    --light: #f9fafb;
+  }
+}
+
+@layer components {
+  .glass-effect {
+    @apply bg-white/10 backdrop-blur-sm border border-white/20;
+  }
+  
+  .price-up {
+    @apply text-green-500;
+  }
+  
+  .price-down {
+    @apply text-red-500;
+  }
+  
+  .feature-card {
+    @apply transition-transform duration-300 hover:-translate-y-1;
+  }
+  
+  .fade-in {
+    @apply animate-fade-in;
+  }
+  
+  .delay-100 {
+    animation-delay: 0.1s;
+  }
+  
+  .delay-200 {
+    animation-delay: 0.2s;
+  }
+  
+  .delay-300 {
+    animation-delay: 0.3s;
+  }
+}
+
+/* Dark mode overrides */
+.dark .hero-gradient {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.dark .glass-effect {
+  @apply bg-slate-700/50 border-white/10;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-500;
+}

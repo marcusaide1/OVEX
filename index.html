@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZARcrypto Exchange - South Africa's Premier Crypto Trading Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #f97316;
+            --primary-dark: #ea580c;
+            --secondary: #4f46e5;
+            --dark: #111827;
+            --darker: #030712;
+            --light: #f9fafb;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+        .bitcoin-gradient {
+            background: linear-gradient(135deg, #f7931a 0%, #ff9500 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .price-up {
+            color: #10B981;
+        }
+        .price-down {
+            color: #EF4444;
+        }
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+        }
+        
+        /* Dark Mode Styles */
+        .dark .hero-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        .dark .glass-effect {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .dark .bg-gray-50 {
+            background-color: var(--darker);
+        }
+        .dark .bg-white {
+            background-color: #1f2937;
+        }
+        .dark .text-gray-900 {
+            color: #f9fafb;
+        }
+        .dark .text-gray-700 {
+            color: #d1d5db;
+        }
+        .dark .text-gray-600 {
+            color: #9ca3af;
+        }
+        .dark .bg-gray-900 {
+            background-color: #030712;
+        }
+        .dark .border-gray-300 {
+            border-color: #374151;
+        }
+        .dark input, .dark textarea {
+            background-color: #1f2937;
+            color: #f9fafb;
+        }
+        .dark input::placeholder, .dark textarea::placeholder {
+            color: #9ca3af;
+        }
+        
+        /* Custom Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .delay-100 {
+            animation-delay: 0.1s;
+        }
+        .delay-200 {
+            animation-delay: 0.2s;
+        }
+        .delay-300 {
+            animation-delay: 0.3s;
+        }
+        
+        /* Custom Components */
+        .price-card {
+            transition: all 0.3s ease;
+        }
+        .price-card:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: translateY(-5px);
+        }
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        .testimonial-card:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Navigation -->
+    <nav class="bg-white dark:bg-gray-800 shadow-lg fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <i class="fas fa-chart-line text-orange-500 text-2xl mr-2"></i>
+                    <span class="text-xl font-bold text-gray-900 dark:text-white">ZARcrypto</span>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 transition-colors">Home</a>
+                    <a href="#about" class="text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 transition-colors">About</a>
+                    <a href="#features" class="text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 transition-colors">Features</a>
+                    <a href="#pricing" class="text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 transition-colors">Pricing</a>
+                    <a href="#testimonials" class="text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 transition-colors">Testimonials</a>
+                    <a href="#contact" class="text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 transition-colors">Contact</a>
+                </div>
+
+                <!-- Desktop Auth Buttons -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <button id="darkModeToggle" class="text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 p-2 rounded-full">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block"></i>
+                    </button>
+                    <a href="login.html" class="text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 transition-colors">Login</a>
+                    <a href="register.html" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg transition-colors">Get Started</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobileMenuBtn" class="text-gray-700 dark:text-gray-300 hover:text-orange-500">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div id="mobileMenu" class="mobile-menu md:hidden fixed inset-0 z-50 bg-black bg-opacity-50">
+            <div class="bg-white dark:bg-gray-800 w-64 h-full shadow-xl">
+                <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
+                    <div class="flex items-center">
+                        <i class="fas fa-chart-line text-orange-500 text-xl mr-2"></i>
+                        <span class="text-lg font-bold dark:text-white">ZARcrypto</span>
+                    </div>
+                    <button id="closeMobileMenu" class="text-gray-500 dark:text-gray-300 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="p-4 space-y-4">
+                    <a href="#home" class="block text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 py-2">Home</a>
+                    <a href="#about" class="block text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 py-2">About</a>
+                    <a href="#features" class="block text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 py-2">Features</a>
+                    <a href="#pricing" class="block text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 py-2">Pricing</a>
+                    <a href="#testimonials" class="block text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 py-2">Testimonials</a>
+                    <a href="#contact" class="block text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 py-2">Contact</a>
+                    <hr class="my-4 dark:border-gray-700">
+                    <button id="mobileDarkModeToggle" class="block w-full text-left text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 py-2">
+                        <i class="fas fa-moon mr-2 dark:hidden"></i>
+                        <i class="fas fa-sun mr-2 hidden dark:inline"></i> Dark Mode
+                    </button>
+                    <a href="login.html" class="block text-gray-700 hover:text-orange-500 dark:text-gray-300 dark:hover:text-orange-400 py-2">Login</a>
+                    <a href="register.html" class="block bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-center">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-gradient pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                <div class="text-white fade-in">
+                    <h1 class="text-3xl md:text-4xl font-bold mb-3">
+                        Trade Bitcoin with 
+                        <span class="text-orange-400">Confidence</span>
+                    </h1>
+                    <p class="text-lg mb-6 text-gray-200 max-w-lg">
+                        South Africa's most trusted cryptocurrency exchange. Buy, sell, and trade Bitcoin with ZAR at competitive rates.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="register.html" class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-3 rounded-lg text-base font-semibold transition-colors text-center">
+                            <i class="fas fa-rocket mr-2"></i>Start Trading Now
+                        </a>
+                        <a href="#features" class="border-2 border-white text-white px-5 py-3 rounded-lg text-base font-semibold hover:bg-white hover:text-gray-900 transition-colors text-center">
+                            <i class="fas fa-info-circle mr-2"></i>Learn More
+                        </a>
+                    </div>
+                    <div class="mt-8 flex flex-wrap gap-4">
+                        <div class="flex items-center">
+                            <div class="bg-orange-500 p-2 rounded-full mr-3">
+                                <i class="fas fa-users text-white"></i>
+                            </div>
+                            <div>
+                                <div class="text-xl font-bold">50K+</div>
+                                <div class="text-sm text-gray-300">Active Users</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="bg-orange-500 p-2 rounded-full mr-3">
+                                <i class="fas fa-chart-line text-white"></i>
+                            </div>
+                            <div>
+                                <div class="text-xl font-bold">R2.5B+</div>
+                                <div class="text-sm text-gray-300">Trading Volume</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="bg-orange-500 p-2 rounded-full mr-3">
+                                <i class="fas fa-server text-white"></i>
+                            </div>
+                            <div>
+                                <div class="text-xl font-bold">99.9%</div>
+                                <div class="text-sm text-gray-300">Uptime</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative fade-in delay-100">
+                    <div class="animate-float">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-lg">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center">
+                                    <i class="fab fa-bitcoin text-orange-500 text-xl mr-2"></i>
+                                    <div>
+                                        <div class="text-base font-bold text-gray-900 dark:text-white">Bitcoin</div>
+                                        <div class="text-xs text-gray-500 dark:text-gray-400">BTC/ZAR</div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-base font-bold text-gray-900 dark:text-white">R 1,245,680</div>
+                                    <div class="text-green-500 text-xs">+5.2% <i class="fas fa-arrow-up"></i></div>
+                                </div>
+                            </div>
+                            <canvas id="btcChart" width="300" height="120"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Prices Section -->
+    <section class="py-12 bg-white dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center mb-12 dark:text-white fade-in">Live Market Prices</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="price-card bg-gray-50 dark:bg-gray-800 rounded-xl p-6 hover:shadow-xl transition-all">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <i class="fab fa-bitcoin text-orange-500 text-2xl mr-3"></i>
+                            <div>
+                                <div class="font-semibold dark:text-white">Bitcoin</div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400">BTC</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold text-lg dark:text-white">R 1,245,680</div>
+                            <div class="text-green-500 text-sm">+5.2% <i class="fas fa-arrow-up"></i></div>
+                        </div>
+                    </div>
+                    <div class="h-16 bg-gradient-to-r from-green-400 to-green-600 rounded"></div>
+                </div>
+
+                <div class="price-card bg-gray-50 dark:bg-gray-800 rounded-xl p-6 hover:shadow-xl transition-all">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <i class="fab fa-ethereum text-blue-500 text-2xl mr-3"></i>
+                            <div>
+                                <div class="font-semibold dark:text-white">Ethereum</div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400">ETH</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold text-lg dark:text-white">R 68,420</div>
+                            <div class="text-red-500 text-sm">-2.1% <i class="fas fa-arrow-down"></i></div>
+                        </div>
+                    </div>
+                    <div class="h-16 bg-gradient-to-r from-red-400 to-red-600 rounded"></div>
+                </div>
+
+                <div class="price-card bg-gray-50 dark:bg-gray-800 rounded-xl p-6 hover:shadow-xl transition-all">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <span class="text-purple-500 font-bold text-2xl mr-3">ADA</span>
+                            <div>
+                                <div class="font-semibold dark:text-white">Cardano</div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400">ADA</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold text-lg dark:text-white">R 8.45</div>
+                            <div class="text-green-500 text-sm">+8.7% <i class="fas fa-arrow-up"></i></div>
+                        </div>
+                    </div>
+                    <div class="h-16 bg-gradient-to-r from-green-400 to-green-600 rounded"></div>
+                </div>
+
+                <div class="price-card bg-gray-50 dark:bg-gray-800 rounded-xl p-6 hover:shadow-xl transition-all">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center">
+                            <span class="text-green-500 font-bold text-2xl mr-3">SOL</span>
+                            <div>
+                                <div class="font-semibold dark:text-white">Solana</div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400">SOL</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold text-lg dark:text-white">R 2,450</div>
+                            <div class="text-green-500 text-sm">+12.3% <i class="fas fa-arrow-up"></i></div>
+                        </div>
+                    </div>
+                    <div class="h-16 bg-gradient-to-r from-green-400 to-green-600 rounded"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-12 bg-gray-50 dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 fade-in">
+                <h2 class="text-3xl font-bold mb-3 dark:text-white">Why Choose ZARcrypto?</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    We're committed to making cryptocurrency trading accessible, secure, and profitable for South Africans.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md fade-in delay-100">
+                    <div class="bg-orange-100 dark:bg-orange-900 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shield-alt text-orange-500 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-center dark:text-white">Bank-Level Security</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-center">Your funds are protected with enterprise-grade security and insurance coverage.</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md fade-in delay-200">
+                    <div class="bg-blue-100 dark:bg-blue-900 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-bolt text-blue-500 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-center dark:text-white">Instant Trading</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-center">Execute trades instantly with our high-performance matching engine.</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md fade-in delay-300">
+                    <div class="bg-green-100 dark:bg-green-900 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-headset text-green-500 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-center dark:text-white">24/7 Support</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-center">Get help anytime with our dedicated South African support team.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-12 bg-white dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 fade-in">
+                <h2 class="text-3xl font-bold mb-3 dark:text-white">Advanced Trading Features</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400">Everything you need to trade like a pro</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="feature-card bg-gray-50 dark:bg-gray-900 rounded-lg p-6 fade-in delay-100">
+                    <div class="bg-orange-100 dark:bg-orange-900 w-10 h-10 rounded-lg flex items-center justify-center mb-3">
+                        <i class="fas fa-chart-candlestick text-orange-500 text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 dark:text-white">Advanced Charts</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Professional trading charts with multiple timeframes and indicators.</p>
+                </div>
+                <div class="feature-card bg-gray-50 dark:bg-gray-900 rounded-lg p-6 fade-in delay-200">
+                    <div class="bg-blue-100 dark:bg-blue-900 w-10 h-10 rounded-lg flex items-center justify-center mb-3">
+                        <i class="fas fa-robot text-blue-500 text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 dark:text-white">AI Trading Bot</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Automate your trading strategies with our intelligent bot.</p>
+                </div>
+                <div class="feature-card bg-gray-50 dark:bg-gray-900 rounded-lg p-6 fade-in delay-300">
+                    <div class="bg-green-100 dark:bg-green-900 w-10 h-10 rounded-lg flex items-center justify-center mb-3">
+                        <i class="fas fa-mobile-alt text-green-500 text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 dark:text-white">Mobile App</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Trade on the go with our feature-rich mobile application.</p>
+                </div>
+                <div class="feature-card bg-gray-50 dark:bg-gray-900 rounded-lg p-6 fade-in delay-100">
+                    <div class="bg-purple-100 dark:bg-purple-900 w-10 h-10 rounded-lg flex items-center justify-center mb-3">
+                        <i class="fas fa-wallet text-purple-500 text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 dark:text-white">Multi-Currency Wallet</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Store and manage multiple cryptocurrencies in one secure wallet.</p>
+                </div>
+                <div class="feature-card bg-gray-50 dark:bg-gray-900 rounded-lg p-6 fade-in delay-200">
+                    <div class="bg-red-100 dark:bg-red-900 w-10 h-10 rounded-lg flex items-center justify-center mb-3">
+                        <i class="fas fa-history text-red-500 text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 dark:text-white">Transaction History</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Complete audit trail of all your trading activities.</p>
+                </div>
+                <div class="feature-card bg-gray-50 dark:bg-gray-900 rounded-lg p-6 fade-in delay-300">
+                    <div class="bg-yellow-100 dark:bg-yellow-900 w-10 h-10 rounded-lg flex items-center justify-center mb-3">
+                        <i class="fas fa-graduation-cap text-yellow-500 text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 dark:text-white">Trading Academy</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Learn trading strategies with our comprehensive educational resources.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-12 bg-gray-50 dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 fade-in">
+                <h2 class="text-3xl font-bold mb-3 dark:text-white">What Our Traders Say</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400">Join thousands of satisfied traders in South Africa</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="testimonial-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md fade-in delay-100">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-lg mr-4">TS</div>
+                        <div>
+                            <h4 class="font-semibold dark:text-white">Thabo Sithole</h4>
+                            <div class="flex text-orange-500">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 italic">"ZARcrypto has completely transformed how I trade. The low fees and instant withdrawals make it my go-to platform for all my crypto needs."</p>
+                </div>
+                
+                <div class="testimonial-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md fade-in delay-200">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-lg mr-4">NM</div>
+                        <div>
+                            <h4 class="font-semibold dark:text-white">Naledi Mokoena</h4>
+                            <div class="flex text-orange-500">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 italic">"The educational resources helped me go from a complete beginner to making consistent profits. The mobile app is especially convenient!"</p>
+                </div>
+                
+                <div class="testimonial-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md fade-in delay-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-lg mr-4">PM</div>
+                        <div>
+                            <h4 class="font-semibold dark:text-white">Peter Moloi</h4>
+                            <div class="flex text-orange-500">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 italic">"Security was my biggest concern, but ZARcrypto's measures are top-notch. Plus, their customer support team actually responds!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-12 bg-white dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 fade-in">
+                <h2 class="text-3xl font-bold mb-3 dark:text-white">Simple, Transparent Pricing</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400">No hidden fees, no surprises</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-8 shadow-lg fade-in delay-100">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold mb-2 dark:text-white">Starter</h3>
+                        <div class="text-4xl font-bold text-orange-500">0.5%</div>
+                        <div class="text-gray-500 dark:text-gray-400">per trade</div>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center dark:text-gray-300">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            Up to R10,000 daily limit
+                        </li>
+                        <li class="flex items-center dark:text-gray-300">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            Basic trading features
+                        </li>
+                        <li class="flex items-center dark:text-gray-300">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            Email support
+                        </li>
+                    </ul>
+                    <a href="register.html" class="block w-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-white py-3 rounded-lg text-center font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                        Get Started
+                    </a>
+                </div>
+
+                <div class="bg-white dark:bg-gray-900 rounded-xl p-8 shadow-lg border-2 border-orange-500 relative fade-in">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold">Most Popular</span>
+                    </div>
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold mb-2 dark:text-white">Pro</h3>
+                        <div class="text-4xl font-bold text-orange-500">0.25%</div>
+                        <div class="text-gray-500 dark:text-gray-400">per trade</div>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center dark:text-gray-300">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            Up to R100,000 daily limit
+                        </li>
+                        <li class="flex items-center dark:text-gray-300">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            Advanced trading features
+                        </li>
+                        <li class="flex items-center dark:text-gray-300">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            Priority support
+                        </li>
+                        <li class="flex items-center dark:text-gray-300">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            AI trading bot access
+                        </li>
+                    </ul>
+                    <a href="register.html" class="block w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg text-center font-semibold transition-colors">
+                        Get Started
+                    </a>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-8 shadow-lg fade-in delay-100">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold mb-2 dark:text-white">Enterprise</h3>
+                        <div class="text-4xl font-bold text-orange-500">0.1%</div>
+                        <div class="text-gray-500 dark:text-gray-400">per trade</div>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center dark:text-gray-300">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            Unlimited trading
+                        </li>
+                        <li class="flex items-center dark:text-gray-300">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            All premium features
+                        </li>
+                        <li class="flex items-center dark:text-gray-300">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            Dedicated account manager
+                        </li>
+                        <li class="flex items-center dark:text-gray-300">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            API access
+                        </li>
+                    </ul>
+                    <a href="register.html" class="block w-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-white py-3 rounded-lg text-center font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                        Contact Sales
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-gradient-to-r from-orange-500 to-orange-600">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-3 fade-in">
+                Ready to Start Trading Bitcoin?
+            </h2>
+            <p class="text-lg text-orange-100 mb-8 fade-in delay-100">
+                Join thousands of South Africans who trust ZARcrypto for their cryptocurrency trading needs.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in delay-200">
+                <a href="register.html" class="bg-white text-orange-500 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors">
+                    Create Free Account
+                </a>
+                <a href="login.html" class="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-orange-500 transition-colors">
+                    Sign In
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-12 bg-gray-50 dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 fade-in">
+                <h2 class="text-3xl font-bold mb-3 dark:text-white">Get in Touch</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400">Have questions? We're here to help!</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 fade-in delay-100">
+                <div>
+                    <h3 class="text-2xl font-semibold mb-6 dark:text-white">Contact Information</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-orange-500 text-xl mt-1 mr-4"></i>
+                            <span class="text-gray-700 dark:text-gray-300">123 Crypto Street, Sandton, Johannesburg, South Africa</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-phone text-orange-500 text-xl mr-4"></i>
+                            <span class="text-gray-700 dark:text-gray-300">+27 11 123 4567</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope text-orange-500 text-xl mr-4"></i>
+                            <span class="text-gray-700 dark:text-gray-300">support@zarcrypto.co.za</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-clock text-orange-500 text-xl mr-4"></i>
+                            <span class="text-gray-700 dark:text-gray-300">24/7 Customer Support</span>
+                        </div>
+                        <div class="mt-8">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14319.10371399951!2d28.0493137!3d-26.10761125!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e9573b5bfd58eef%3A0x1d5e5e0e1a3a3a3a!2sSandton%2C%20Johannesburg%2C%20South%20Africa!5e0!3m2!1sen!2sus!4v1651234567890!5m2!1sen!2sus" width="100%" height="250" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <form class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+                            <input type="text" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-800 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                            <input type="email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-800 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subject</label>
+                            <input type="text" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-800 dark:text-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Message</label>
+                            <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-gray-800 dark:text-white"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-semibold transition-colors">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-chart-line text-orange-500 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">ZARcrypto</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        South Africa's trusted cryptocurrency exchange platform.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-telegram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Products</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Spot Trading</a></li>
+                        <li><a href="#" class="hover:text-white">Futures Trading</a></li>
+                        <li><a href="#" class="hover:text-white">Staking</a></li>
+                        <li><a href="#" class="hover:text-white">NFT Marketplace</a></li>
+                        <li><a href="#" class="hover:text-white">Crypto Loans</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white">Trading Academy</a></li>
+                        <li><a href="#" class="hover:text-white">API Documentation</a></li>
+                        <li><a href="#" class="hover:text-white">Status Page</a></li>
+                        <li><a href="#" class="hover:text-white">Community Forum</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white">Risk Disclosure</a></li>
+                        <li><a href="#" class="hover:text-white">AML Policy</a></li>
+                        <li><a href="#" class="hover:text-white">Compliance</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-8 border-gray-800">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">
+                    © 2024 ZARcrypto Exchange. All rights reserved. FSP No: 12345
+                </p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="login.html" class="text-gray-400 hover:text-white text-sm">Login</a>
+                    <a href="register.html" class="text-gray-400 hover:text-white text-sm">Register</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Blog</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Careers</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+        });
+
+        closeMobileMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+        });
+
+        // Close mobile menu when clicking outside
+        mobileMenu.addEventListener('click', (e) => {
+            if (e.target === mobileMenu) {
+                mobileMenu.classList.remove('open');
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Close mobile menu if open
+                    mobileMenu.classList.remove('open');
+                }
+            });
+        });
+
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const mobileDarkModeToggle = document.getElementById('mobileDarkModeToggle');
+        const html = document.documentElement;
+        
+        // Check for saved theme preference
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            html.classList.add('dark');
+        }
+        
+        function toggleDarkMode() {
+            html.classList.toggle('dark');
+            if (html.classList.contains('dark')) {
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        }
+        
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+        mobileDarkModeToggle.addEventListener('click', toggleDarkMode);
+
+        // Bitcoin Chart
+        const ctx = document.getElementById('btcChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                datasets: [{
+                    label: 'BTC Price (ZAR)',
+                    data: [1200000, 1220000, 1180000, 1250000, 1230000, 1260000, 1245680],
+                    borderColor: '#f7931a',
+                    backgroundColor: 'rgba(247, 147, 26, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        display: false
+                    },
+                    y: {
+                        display: false
+                    }
+                },
+                elements: {
+                    point: {
+                        radius: 0
+                    }
+                }
+            }
+        });
+
+        // Simulate real-time price updates
+        setInterval(() => {
+            const priceElements = document.querySelectorAll('.font-bold.text-lg');
+            priceElements.forEach(element => {
+                const currentPrice = parseFloat(element.textContent.replace(/[^\d.]/g, ''));
+                const change = (Math.random() - 0.5) * 1000;
+                const newPrice = currentPrice + change;
+                element.textContent = `R ${newPrice.toLocaleString('en-ZA', {minimumFractionDigits: 0})}`;
+            });
+        }, 5000);
+        
+        // Animation on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
